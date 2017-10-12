@@ -1,5 +1,7 @@
 package edu.upc.eseiaat.pma.countrylist;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -35,17 +37,28 @@ public class CountryListActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View item, int pos, long id) {
-                String short_click = "Has escogigo '" + country_list.get(pos) + "'.";
-                Toast.makeText(CountryListActivity.this, short_click, Toast.LENGTH_SHORT).show();
+                String short_click = " '" + country_list.get(pos) + "'.";
+                Toast.makeText(CountryListActivity.this, getResources().getString(R.string.chosen) + short_click, Toast.LENGTH_SHORT).show();
             }
         });
 
         //Toque largo en un país
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View item, int pos, long id) {
-                country_list.remove(pos);
-                adapter.notifyDataSetChanged();
+            public boolean onItemLongClick(AdapterView<?> parent, View item, final int pos, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CountryListActivity.this);
+                builder.setTitle(R.string.confirmation);
+                String question = getResources().getString(R.string.question);
+                builder.setMessage(question + " " + country_list.get(pos) + "?");
+                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        country_list.remove(pos);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, null);
+                builder.create().show();
                 return true;
             }
         });
