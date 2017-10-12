@@ -26,7 +26,7 @@ public class CountryListActivity extends AppCompatActivity {
 
         ListView list = (ListView) findViewById(R.id.country_list);
 
-        //Adaptadot
+        //Adaptador
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, country_list);
         list.setAdapter(adapter);
@@ -35,10 +35,19 @@ public class CountryListActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View item, int pos, long id) {
-                String short_click = "Has escogigo " + country_list.get(pos) + ".";
+                String short_click = "Has escogigo '" + country_list.get(pos) + "'.";
                 Toast.makeText(CountryListActivity.this, short_click, Toast.LENGTH_SHORT).show();
             }
         });
 
+        //Toque largo en un país
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View item, int pos, long id) {
+                country_list.remove(pos);
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
     }
 }
